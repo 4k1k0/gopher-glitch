@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,33 +11,17 @@ import (
 
 func main() {
 
-	check_errors()
+	file_name := flag.String("file", "", "the name of your image")
+	iterations := flag.Int("n", 5, "the number of files")
 
-	file_name := os.Args[1]
-	_, error := strconv.Atoi(os.Args[2])
-	if error != nil {
-		fmt.Println("Not a number")
+	flag.Parse()
+
+	if *file_name == "" {
+		fmt.Println("Select an image")
 		os.Exit(1)
 	}
 
-	n, _ := strconv.Atoi(os.Args[2])
-
-	generate(file_name, n)
-}
-
-func check_errors() {
-	if len(os.Args) < 2 {
-		fmt.Println("Add an image")
-		os.Exit(1)
-	}
-	if len(os.Args) < 3 {
-		fmt.Println("Add a number")
-		os.Exit(1)
-	}
-	if len(os.Args) != 3 {
-		fmt.Println("Something went wrong")
-		os.Exit(1)
-	}
+	generate(*file_name, *iterations)
 }
 
 func check(e error) {
