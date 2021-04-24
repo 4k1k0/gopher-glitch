@@ -32,7 +32,7 @@ func main() {
 func generateRandomNumber(min, max int) int {
 	rand.Seed(time.Now().UnixNano())
 	diff := max - min
-	if diff == 0 {
+	if diff <= 0 {
 		return rand.Intn(max)
 	}
 	return rand.Intn(diff) + min
