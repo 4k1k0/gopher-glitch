@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"image"
+	"image/gif"
 	"log"
 	"math/rand"
 	"os"
@@ -65,13 +68,15 @@ func generate(file string, iterations int) {
 		os.Mkdir(directory, os.ModePerm)
 	}
 
+	files := make([]string, 0)
+
 	for i := 0; i < iterations; i++ {
 		rand.Seed(time.Now().UnixNano())
 		gl.Seed(rand.Int63())
 
 		gl.Copy()
 
-		filename := fmt.Sprintf("./glitch_%d_%s", i+1, file)
+		filename := fmt.Sprintf("glitch_%d_%s", i+1, file)
 		fmt.Printf("[%d/%d] Generating %s\n", i+1, iterations, filename)
 
 		// Lineas verticales
@@ -122,10 +127,67 @@ func generate(file string, iterations int) {
 		}
 		gl.Write(f)
 
+		files = append(files, filename)
+
 		// move
 		err = os.Rename(filename, fmt.Sprintf("%s/%s", directory, filename))
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
+
+	createAnimation(files, directory, file)
+}
+
+func createAnimation(files []string, directory, filename string) {
+	fmt.Println("Generating GIF")
+	outGif := &gif.GIF{}
+	total := len(files)
+
+	for i, name := range files {
+		fmt.Printf("[%d/%d] Processing GIF\n", i+1, total)
+		input := fmt.Sprintf("%s/%s", directory, name)
+
+		f, err := os.Open(input)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		imageData, _, err := image.Decode(f)
+		if err != nil {
+			log.Println("Error al decorde archivo")
+			log.Fatal(err)
+		}
+
+		buf := bytes.Buffer{}
+
+		if err = gif.Encode(&buf, imageData, nil); err != nil {
+			log.Println("Error al encode archivo")
+			log.Fatal(err)
+		}
+
+		inGif, err := gif.Decode(&buf)
+		if err != nil {
+			log.Println("Erro en gif decode")
+			log.Fatal(err)
+		}
+		f.Close()
+
+		outGif.Image = append(outGif.Image, inGif.(*image.Paletted))
+		outGif.Delay = append(outGif.Delay, 0)
+	}
+
+	output := fmt.Sprintf("FINAL_%s.gif", filename)
+
+	f, err := os.Create(output)
+	if err != nil {
+		log.Fatal(err)
+	}
+	gif.EncodeAll(f, outGif)
+
+	err = os.Rename(output, fmt.Sprintf("%s/%s", directory, output))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
