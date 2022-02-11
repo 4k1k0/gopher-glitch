@@ -1,2 +1,8 @@
 .DS_Store
 .idea
+art
+*.jpeg
+*jpg
+*png
+*webp
+gopher-glitch

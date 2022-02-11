@@ -1,0 +1,20 @@
+{
+  "path": "/tmp",
+  "transpose_input": true,
+  "vertital_transpose_input": true,
+  "styles": [
+    "TransposeInput",
+    "VerticalTransposeInput",
+    "CompressionGhost",
+    "GhostStreach",
+    "HalfLifeLeft",
+    "HalfLifeRight",
+    "ChannelShiftLeft",
+    "ChannelShiftRight",
+    "BlueBoost",
+    "GreenBoost",
+    "RedBoost",
+    "PrismBurst",
+    "Noise"
+  ]
+}
