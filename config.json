@@ -1,0 +1,12 @@
+{
+  "path": "/Users/wako/Pictures/Art/Gen",
+  "transpose_input": true,
+  "vertital_transpose_input": true,
+  "styles": [
+    "TransposeInput",
+    "GhostStreach",
+    "HalfLifeRight",
+    "ChannelShiftLeft",
+    "BlueBoost"
+  ]
+}
